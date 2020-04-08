@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16095" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16095"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SafariExtensionViewController" customModule="Ultra_TabSaver" customModuleProvider="target">
+            <connections>
+                <outlet property="custom_menu" destination="WqH-lU-Pvh" id="ZbU-6M-Y7V"/>
+                <outlet property="set_all_pages" destination="WtS-gG-l9E" id="cc0-RZ-5kT"/>
+                <outlet property="set_this_page" destination="6IM-wf-E7T" id="CKH-tt-AoP"/>
+                <outlet property="view" destination="MHJ-3u-EPE" id="xlV-Xr-i55"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <menu id="WqH-lU-Pvh">
+            <items>
+                <menuItem title="Loading" state="on" tag="1" alternate="YES" id="HmD-ev-jab">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" autoenablesItems="NO" id="hAD-Fb-eoi">
+                        <items>
+                            <menuItem title="Item 1" state="on" tag="1" id="8Tk-bf-jnX">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Item 2" id="R6B-1k-XZh">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Item 3" id="van-YE-YZd">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Item" id="AGe-Z1-3Ht">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="281" y="349"/>
+        </menu>
+        <menu id="oqd-uO-4s5">
+            <items>
+                <menuItem title="Item 1" id="iIb-VZ-7EU">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="421.5" y="132"/>
+        </menu>
+        <customView wantsLayer="YES" canDrawConcurrently="YES" focusRingType="exterior" id="MHJ-3u-EPE">
+            <rect key="frame" x="0.0" y="0.0" width="136" height="199"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button canDrawConcurrently="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6IM-wf-E7T">
+                    <rect key="frame" x="6" y="120" width="125" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Save this tab" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="o9M-NF-ZTP">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="user" size="13"/>
+                    </buttonCell>
+                    <color key="contentTintColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    <connections>
+                        <action selector="saveThisWithSender:" target="-2" id="jaj-VF-Ogu"/>
+                    </connections>
+                </button>
+                <button canDrawConcurrently="YES" verticalHuggingPriority="750" id="WtS-gG-l9E">
+                    <rect key="frame" x="8" y="78" width="117" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Save all tabs" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="juf-Zc-9TD">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="saveAllWithSender:" target="-2" id="j6N-GR-ufl"/>
+                    </connections>
+                </button>
+                <button canDrawConcurrently="YES" verticalHuggingPriority="750" id="V9Z-ee-i6C">
+                    <rect key="frame" x="13" y="35" width="108" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Get all tabs" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bVA-oW-cFj">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <connections>
+                            <action selector="getAllWithSender:" target="-2" id="OKr-PZ-5VR"/>
+                        </connections>
+                    </buttonCell>
+                </button>
+                <textField canDrawConcurrently="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="PZ7-CT-R42">
+                    <rect key="frame" x="35" y="165" width="65" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="TabSaver" id="pTq-Og-4JD">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="25" y="99"/>
+        </customView>
+    </objects>
+</document>
