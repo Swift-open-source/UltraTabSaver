@@ -77,7 +77,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     }
     
   @objc func savePageLeftClick(){
-           Persistance.shared.saveThis()
+           Persistance.shared.saveActualPage()
            if (main_menu.items.count > 0){
                              main_menu.removeAllItems()
            }
@@ -85,7 +85,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
        }
        
        @objc func saveAllLeftClick(){
-           Persistance.shared.saveAll()
+           Persistance.shared.saveAllPages()
         custom_menu = NSMenu()
 
            getAllLeftClick()
@@ -96,7 +96,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
        }
        
     @IBAction func saveThis(sender: AnyObject){
-        Persistance.shared.saveThis()
+        Persistance.shared.saveActualPage()
         custom_menu = NSMenu()
         custom_menu.addItem(getMenuItem(title: "Page saved",selector: #selector(noHaceNada)))
         custom_menu.popUp(positioning: custom_menu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
@@ -107,7 +107,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     }
     
     @IBAction func saveAll(sender: AnyObject){
-        Persistance.shared.saveAll()
+        Persistance.shared.saveAllPages()
         custom_menu = NSMenu()
         custom_menu.addItem(getMenuItem(title: "Page saved",selector: #selector(noHaceNada)))
         custom_menu.popUp(positioning: custom_menu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
@@ -171,7 +171,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     
     @objc func optionShareGroup(){
         NSPasteboard.general.clearContents()
-        let url_list = Persistance.shared.getByKey(key: selectedGroup).compactMap { $0.absoluteString }.joined(separator: "\n")
+        let url_list = Persistance.shared.getUrlByKey(key: selectedGroup).compactMap { $0.absoluteString }.joined(separator: "\n")
         NSPasteboard.general.setString(url_list, forType: .string)
         
      }
@@ -278,7 +278,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
             
       } else {
           // Left button click
-            for url in Persistance.shared.getByKey(key: sender.title) {
+            for url in Persistance.shared.getUrlByKey(key: sender.title) {
             let url = URL(string: url.absoluteString)!
             NSWorkspace.shared.open(url)
         }

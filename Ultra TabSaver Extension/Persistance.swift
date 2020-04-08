@@ -12,32 +12,27 @@ import SafariServices
 class Persistance {
     
     
-    var page:SFSafariPage!
+    var actual_page:SFSafariPage!
     static let shared = Persistance()
     var date = Date()
-    let formatter = DateFormatter()
-    var pageWindow:SFSafariWindow!
+    let date_formatter = DateFormatter()
+    var current_pageWindow:SFSafariWindow!
     var emptyDict = [String:[URL]]()
-    var new = true
-    var new_flag = 3
     init(){
-        if(new){
-            
-        }
         load()
         UserDefaults.standard.synchronize()
-        formatter.dateFormat = "dd.MM.yyyy"
+        date_formatter.dateFormat = "dd.MM.yyyy"
     }
     
     
-    func setThis(page: SFSafariPage){
-        self.page = page
+    func setActualPage(page: SFSafariPage){
+        self.actual_page = page
     }
 
-    func getStringDictionary() -> [String:[String]]{
+    func getDictionaryAsString() -> [String:[String]]{
         var dic2:[String:[String]] = [:]
         for (k,_) in emptyDict{
-            dic2[k] = getByKey(key: k).compactMap { $0.absoluteString }
+            dic2[k] = getUrlByKey(key: k).compactMap { $0.absoluteString }
         }
         return dic2
     }
@@ -50,9 +45,7 @@ class Persistance {
         return lista2
     }
     
-    
-    
-    func getStringDate(date:Date) -> String {
+    func getStringAsDate(date:Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let myString = formatter.string(from: date)
@@ -62,9 +55,9 @@ class Persistance {
         return myStringafd
     }
     
-    func saveThis(){
-        if (page != nil){
-            page.getPropertiesWithCompletionHandler({ (properties) in
+    func saveActualPage(){
+        if (actual_page != nil){
+            actual_page.getPropertiesWithCompletionHandler({ (properties) in
                guard let properties = properties else {
                    self.validationHandler(false, "")
                    return
@@ -79,14 +72,14 @@ class Persistance {
                    return
                }
                                                    
-                self.emptyDict[self.getStringDate(date: Date())] = [url]
+                self.emptyDict[self.getStringAsDate(date: Date())] = [url]
              })
         }
-        save()
-        if(page != nil ){
-            page!.getContainingTab(completionHandler: { currentTab in
+        persist()
+        if(actual_page != nil ){
+            actual_page!.getContainingTab(completionHandler: { currentTab in
                 currentTab.getContainingWindow(completionHandler: { window in
-                    self.pageWindow  = window
+                    self.current_pageWindow  = window
                     window?.getAllTabs(completionHandler: { tab_list in
                         for _ in tab_list{
                                NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
@@ -106,7 +99,7 @@ class Persistance {
     }
     
     
-    func getByKey(key:String) -> [URL] {
+    func getUrlByKey(key:String) -> [URL] {
         var retorno = [URL(string: "ERROR")!]
         for (k,_) in emptyDict{
             if (k.elementsEqual(key)){
@@ -116,13 +109,13 @@ class Persistance {
         return retorno
     }
     
-    func saveAll(){
+    func saveAllPages(){
         var flag = true
-        let date = getStringDate(date:Date())
-        if(page != nil ){
-        page!.getContainingTab(completionHandler: { currentTab in
+        let date = getStringAsDate(date:Date())
+        if(actual_page != nil ){
+        actual_page!.getContainingTab(completionHandler: { currentTab in
             currentTab.getContainingWindow(completionHandler: { window in
-                self.pageWindow  = window
+                self.current_pageWindow  = window
                 window?.getAllTabs(completionHandler: { tab_list in
                     var i = 0
                                for tab in tab_list{
@@ -151,7 +144,7 @@ class Persistance {
                                         }else{
                                             self.emptyDict[date]?.append(url)
                                         }
-                                        self.save()
+                                        self.persist()
                                       })
                                     NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
                                     if (i < tab_list.count){
@@ -176,7 +169,7 @@ class Persistance {
     
     func deleteAll(){
         emptyDict = [:]
-        save()
+        persist()
     }
     
     func getAll()-> [String:[URL]] {
@@ -184,11 +177,11 @@ class Persistance {
         return self.emptyDict
     }
 
-    func save(){
+    func persist(){
             let domain = Bundle.main.bundleIdentifier!
             UserDefaults.standard.removePersistentDomain(forName: domain)
             UserDefaults.standard.synchronize()
-            let dic2:[String:[String]] = getStringDictionary()
+            let dic2:[String:[String]] = getDictionaryAsString()
             var  keyList = [String]()
             for (key,value) in dic2{
 
@@ -217,7 +210,7 @@ class Persistance {
     
     func deleteKey(key: String){
         emptyDict.removeValue(forKey: key)
-        save()
+        persist()
     }
     
     func renameKey(oldKey:String, newKey:String){
@@ -226,13 +219,13 @@ class Persistance {
         }else{
             emptyDict[newKey] = emptyDict[oldKey]
             deleteKey(key: oldKey)
-            save()
+            persist()
         }
     }
     
     func addPage(key:String, pageURL:String){
         emptyDict[key]?.append(URL(string:pageURL)!)
-        save()
+        persist()
     }
     
     func dialogOK(question: String, text: String) -> Bool {
@@ -246,11 +239,11 @@ class Persistance {
       }
     
     func deletePage(key:String, page:String ){
-        let index = getStringDictionary()[key]?.firstIndex(of: page) ?? -1
+        let index = getDictionaryAsString()[key]?.firstIndex(of: page) ?? -1
         if (index != -1){
              emptyDict[key]?.remove(at: index)
         }
-        save()
+        persist()
     }
     
     
@@ -263,10 +256,10 @@ class Persistance {
     }
     
     func getWindow()->SFSafariWindow{
-        return self.pageWindow
+        return self.current_pageWindow
     }
     
     func setWindow(window:SFSafariWindow){
-        self.pageWindow = window
+        self.current_pageWindow = window
     }
 }
