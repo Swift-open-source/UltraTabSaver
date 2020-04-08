@@ -25,14 +25,6 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     static let shared = SafariExtensionViewController()
     var flag = false
 
-    /*
-    static let shared: SafariExtensionViewController = {
-        var shared = SafariExtensionViewController()
-        shared.preferredContentSize = NSSize(width:136, height:199)
-        NSLog(" ////// RETURN ")
-        return shared
-    }()
-    */
     override func viewDidLoad() {
         preferredContentSize = NSSize(width: 136, height: 199)
         super.viewDidLoad()
@@ -41,7 +33,6 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     func flag(bool: Bool){
         flag = bool
     }
-    
     
     func toolbarItemClicked(sender: SFSafariWindow){
         flag = false
@@ -56,11 +47,9 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         getAll.submenu = custom_menu
         main_menu.addItem(getAll)
         main_menu.popUp(positioning: main_menu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
-               
     }
     
 
-    
     func toolbarItemClicked2(){
         main_menu = NSMenu()
         firstItemPoint = NSEvent.mouseLocation
