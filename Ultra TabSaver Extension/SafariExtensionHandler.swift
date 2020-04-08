@@ -14,14 +14,12 @@ class SafariExtensionHandler: SFSafariExtensionHandler {
 
     override func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         // This method will be called when a content script provided by your extension calls safari.extension.dispatchMessage("message").
-        NSLog(" ////// RECIBIO MENSAJE")
         Persistance.shared.setThis(page: page)
         
     }
     
     override func toolbarItemClicked(in window: SFSafariWindow) {
         // Este metodo no hace nada
-        NSLog(" ////// TOCA BOTON RUEBAAA")
         SafariExtensionViewController.shared.toolbarItemClicked(sender: window)
     }
     

@@ -80,19 +80,15 @@ class Persistance {
                }
                                                    
                 self.emptyDict[self.getStringDate(date: Date())] = [url]
-                NSLog("///////// UNO SALVADO")
              })
         }
         save()
         if(page != nil ){
-            NSLog("///////// UNO TRIDJSDAA")
             page!.getContainingTab(completionHandler: { currentTab in
-                   NSLog("///////// CURRENT TAB")
                 currentTab.getContainingWindow(completionHandler: { window in
                     self.pageWindow  = window
                     window?.getAllTabs(completionHandler: { tab_list in
                         for _ in tab_list{
-                            NSLog("///////// UNO TRIDJSDAA")
                                NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
                                if (tab_list.count > 1){
                                    currentTab.close()
@@ -267,50 +263,10 @@ class Persistance {
     }
     
     func getWindow()->SFSafariWindow{
-        NSLog("/////////PIDIO LA WINDOW ///////")
         return self.pageWindow
     }
     
     func setWindow(window:SFSafariWindow){
-        NSLog("/////////LLEGO ///////")
         self.pageWindow = window
-        NSLog("/////////GUARDO LA WINDOW ///////")
-    }
-    
-    func aux(){
-        self.page.getContainingTab(completionHandler: { currentTab in
-                  currentTab.getContainingWindow(completionHandler: { window in
-                    NSLog("/////////LLEGO ///////")
-                    self.pageWindow = window!
-                    NSLog("/////////LLEGO ///////")
-                      window?.getAllTabs(completionHandler: { tab_list in
-                          for tab in tab_list{
-                              tab.getActivePage(completionHandler: { (page) in
-                                  guard let page = page else {
-                                      self.validationHandler(false, "")
-                                      return
-                                  }
-                                  page.getPropertiesWithCompletionHandler({ (properties) in
-                                      guard let properties = properties else {
-                                          self.validationHandler(false, "")
-                                          return
-                                      }
-                                      
-                                      guard let url = properties.url else {
-                                          self.validationHandler(false, "")
-                                          return
-                                      }
-                                      guard url.scheme == "http" || url.scheme == "https" else {
-                                          self.validationHandler(false, "")
-                                          return
-                                      }
-                                      NSLog(url.absoluteString)
-                                      self.validationHandler(true, "")
-                                  })
-                              })
-                          }
-                      })
-                  })
-              })
     }
 }
