@@ -26,7 +26,8 @@
 - **[README en español](README-spanish.md)**
 
 ## Update
-**If this repository reaches 50 stars, I will register and upload the App to the App store (
+- **[Promotional Video](https://www.youtube.com/watch?v=PNPAnn-jOCE)**
+- **If this repository reaches 50 stars, I will register and upload the App to the App store (
 obviously it will be free for everyone)**
 
 ## Features
