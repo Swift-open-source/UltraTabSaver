@@ -27,7 +27,7 @@
 
 ## Update
 **If this repository reaches 50 stars, I will register and upload the App to the App store (
-obviously it will be free for everyone)
+obviously it will be free for everyone)**
 
 ## Features
 This extension adds 3 main Features to Safari:
