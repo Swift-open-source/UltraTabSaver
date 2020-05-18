@@ -22,6 +22,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     var selectedGroup:String!
     var selectedPageKey:String!
     var firstItemPoint:NSPoint!
+    var choicedPage:Page!
     static let shared = SafariExtensionViewController()
     var flag = false
 
@@ -42,7 +43,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         main_menu.removeAllItems()
         main_menu.addItem(getMenuItem(title: "Save this tab", selector:#selector(savePageLeftClick) ))
         main_menu.addItem(getMenuItem(title: "Save all tabs", selector: #selector(saveAllLeftClick)))
-        var getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
+        let getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
         self.parse(list: Persistance.shared.getAll())
         getAll.submenu = custom_menu
         main_menu.addItem(getAll)
@@ -57,7 +58,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         main_menu.removeAllItems()
         main_menu.addItem(getMenuItem(title: "Save this tab", selector:#selector(savePageLeftClick) ))
         main_menu.addItem(getMenuItem(title: "Save all tabs", selector: #selector(saveAllLeftClick)))
-        var getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
+        let getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
         self.parse(list: Persistance.shared.getAll())
         getAll.submenu = custom_menu
         main_menu.addItem(getAll)
@@ -139,6 +140,8 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         if event.type == NSEvent.EventType.rightMouseUp {
         // Right button click
             selectedPage = sender.title
+            let url = URL(string: sender.keyEquivalent)!
+            choicedPage = Page(title: selectedPage, url: url)
             let delete = getMenuItem(title: "Delete", selector: #selector(optionDeletePage))
             let copyToClipboard  = getMenuItem(title:  "Copy to clipboard", selector: #selector(optionSharePage) )
 
@@ -148,19 +151,16 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
             options.addItem(delete)
             options.addItem(copyToClipboard)
             options.popUp(positioning: options.item(at: 0), at: NSEvent.mouseLocation, in: nil)
-            
-            
-        } else {
-            // Left button click
-            let url = URL(string: sender.title)!
+        }
+        if event.type == NSEvent.EventType.leftMouseUp {
+            let url = URL(string: sender.keyEquivalent)!
             NSWorkspace.shared.open(url)
-            
         }
     }
     
     @objc func optionShareGroup(){
         NSPasteboard.general.clearContents()
-        let url_list = Persistance.shared.getUrlByKey(key: selectedGroup).compactMap { $0.absoluteString }.joined(separator: "\n")
+        let url_list = Persistance.shared.getUrlByKey(key: selectedGroup).compactMap { $0.url.absoluteString }.joined(separator: "\n")
         NSPasteboard.general.setString(url_list, forType: .string)
         
      }
@@ -199,7 +199,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     }
        
    @objc func optionDeletePage(){
-        Persistance.shared.deletePage(key: selectedPageKey, page: selectedPage)
+        Persistance.shared.deletePage(key: selectedPageKey, page: choicedPage)
     }
     
     @objc func optionAddPage() ->Bool{
@@ -220,7 +220,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
 
            if (response == NSApplication.ModalResponse.alertFirstButtonReturn) {
             if(!txt.stringValue.isEmpty){
-                Persistance.shared.addPage(key: selectedGroup, pageURL: txt.stringValue)
+                Persistance.shared.addPage(key: selectedGroup, page: Page(title: "title", url: URL(string: txt.stringValue)!))
             }
                  return true
              } else {
@@ -268,13 +268,13 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
       } else {
           // Left button click
             for url in Persistance.shared.getUrlByKey(key: sender.title) {
-            let url = URL(string: url.absoluteString)!
+                let url = URL(string: url.url.absoluteString)!
             NSWorkspace.shared.open(url)
         }
        }
     }
     
-    func parse(list:[String:[URL]]){
+    func parse(list:[String:[Page]]){
         var i = 0
         var ii = 0
         custom_menu = NSMenu()
@@ -294,10 +294,11 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
                 for page in v {
                     let a = NSMenuItem()
                     lista_de_subitems.insert(a, at: ii)
-                    let pageTitle = page.absoluteString
+                    let pageTitle = page.title
                     
                         if (!pageTitle.isEmpty) {
                             self.lista_de_subitems[ii] = getMenuItem(title: pageTitle, selector: #selector(selectPage))
+                            self.lista_de_subitems[ii].keyEquivalent = page.url.absoluteString
                             self.lista_submenu[i].addItem(self.lista_de_subitems[ii])
                     ii+=1
                     }
