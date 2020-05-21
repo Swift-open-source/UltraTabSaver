@@ -27,9 +27,7 @@
 
 ## Update
 - **[Promotional Video](https://www.youtube.com/watch?v=PNPAnn-jOCE)**
-- **If this repository reaches 50 stars, I will register and upload the App to the App store (
-obviously it will be free for everyone)**
-- Thank you for all the feedback, now that I know that many people find it useful I'll publish it to the App Store soon.
+- **Thank you for all the feedback, now that I know that many people find it useful I'll publish it to the App Store soon.**
 
 ## Features
 This extension adds 3 main Features to Safari:
