@@ -90,7 +90,7 @@ For more info look [here](https://blog.yimingliu.com/2018/11/14/notes-on-porting
 ## License
 
 - **[GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)**
-- Copyright 2020 © <a href="http://matias.morsa.com" target="_blank">Matias Morsa</a>.
+- Copyright 2020 © <a href="https://www.linkedin.com/in/morsamatias" target="_blank">Matias Morsa</a>.
 - This proyect is and always is going to be open source.
 ---
 ## Thanks to
