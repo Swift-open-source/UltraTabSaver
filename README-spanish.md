@@ -91,7 +91,7 @@ Para mas informacion mirar este [link](https://blog.yimingliu.com/2018/11/14/not
 ## Licencia
 
 - **[GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)**
-- Copyright 2020 © <a href="http://matias.morsa.com" target="_blank">Matias Morsa</a>.
+- Copyright 2020 © <a href="https://www.linkedin.com/in/morsamatias" target="_blank">Matias Morsa</a>.
 - Este proyecto es y siempre va a ser open-source
 ---
 ## Gracias especiales a:
