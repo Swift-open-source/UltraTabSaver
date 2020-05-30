@@ -27,7 +27,7 @@
 
 ## Update
 - **[Video Promocional](https://www.youtube.com/watch?v=PNPAnn-jOCE)**
-- **Si este repositorio llega a tener 50 estrellas me voy a registrar como desarollador y voy a subir esta App al App Store (obviamente va a estar gratis para todos)**
+- **Gracias a todos por el feedback, voy a subir esta extension al AppStore en cuanto pueda**
 
 ## Funcionalidades
 Esta extension agrega 3 caracterisitcas principales a Safari
