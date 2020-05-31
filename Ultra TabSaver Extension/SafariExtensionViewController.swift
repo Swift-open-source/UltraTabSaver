@@ -10,7 +10,7 @@ import SafariServices
 
 
 class SafariExtensionViewController: SFSafariExtensionViewController {
-   
+    
     @IBOutlet var custom_menu:NSMenu!
     @IBOutlet var set_this_page:NSButton!
     @IBOutlet var set_all_pages:NSButton!
@@ -22,9 +22,10 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     var selectedGroup:String!
     var selectedPageKey:String!
     var firstItemPoint:NSPoint!
+    var originPage:Page!
     static let shared = SafariExtensionViewController()
     var flag = false
-
+    
     override func viewDidLoad() {
         preferredContentSize = NSSize(width: 136, height: 199)
         super.viewDidLoad()
@@ -42,14 +43,14 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         main_menu.removeAllItems()
         main_menu.addItem(getMenuItem(title: "Save this tab", selector:#selector(savePageLeftClick) ))
         main_menu.addItem(getMenuItem(title: "Save all tabs", selector: #selector(saveAllLeftClick)))
-        var getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
+        let getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
         self.parse(list: Persistance.shared.getAll())
         getAll.submenu = custom_menu
         main_menu.addItem(getAll)
         main_menu.popUp(positioning: main_menu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
     }
     
-
+    
     func toolbarItemClicked2(){
         main_menu = NSMenu()
         firstItemPoint = NSEvent.mouseLocation
@@ -57,33 +58,33 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         main_menu.removeAllItems()
         main_menu.addItem(getMenuItem(title: "Save this tab", selector:#selector(savePageLeftClick) ))
         main_menu.addItem(getMenuItem(title: "Save all tabs", selector: #selector(saveAllLeftClick)))
-        var getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
+        let getAll = getMenuItem(title: "Saved tabs", selector: #selector(getAllLeftClick))
         self.parse(list: Persistance.shared.getAll())
         getAll.submenu = custom_menu
         main_menu.addItem(getAll)
         main_menu.popUp(positioning: main_menu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
-               
+        
     }
     
-  @objc func savePageLeftClick(){
-           Persistance.shared.saveActualPage()
-           if (main_menu.items.count > 0){
-                             main_menu.removeAllItems()
-           }
-           getAllLeftClick()
-       }
-       
-       @objc func saveAllLeftClick(){
-           Persistance.shared.saveAllPages()
+    @objc func savePageLeftClick(){
+        Persistance.shared.saveActualPage()
+        if (main_menu.items.count > 0){
+            main_menu.removeAllItems()
+        }
+        getAllLeftClick()
+    }
+    
+    @objc func saveAllLeftClick(){
+        Persistance.shared.saveAllPages()
         custom_menu = NSMenu()
-
-           getAllLeftClick()
-       }
-       
-       @objc func getAllLeftClick(){
-           self.parse(list: Persistance.shared.getAll())
-       }
-       
+        
+        getAllLeftClick()
+    }
+    
+    @objc func getAllLeftClick(){
+        self.parse(list: Persistance.shared.getAll())
+    }
+    
     @IBAction func saveThis(sender: AnyObject){
         Persistance.shared.saveActualPage()
         custom_menu = NSMenu()
@@ -110,7 +111,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         alert.addButton(withTitle: "OK")
         alert.addButton(withTitle: "Cancel")
         return alert.runModal() == .alertFirstButtonReturn
-
+        
     }
     
     func dialogEverythingOK(question: String) -> Bool {
@@ -120,9 +121,9 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         alert.alertStyle = .informational
         alert.addButton(withTitle: "OK")
         return alert.runModal() == .alertFirstButtonReturn
-
+        
     }
-
+    
     
     @IBAction func getAll(sender: AnyObject){
         print("Get All")
@@ -130,40 +131,39 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         custom_menu.popUp(positioning: custom_menu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
         
     }
-  
+    
     
     @objc func selectPage(sender: NSMenuItem){
         
         selectedPageKey = sender.parent?.title
         let event = NSApp.currentEvent!
         if event.type == NSEvent.EventType.rightMouseUp {
-        // Right button click
+            // Right button click
             selectedPage = sender.title
+            let url = URL(string: sender.keyEquivalent)!
+            originPage = Page(title: selectedPage, url: url)
             let delete = getMenuItem(title: "Delete", selector: #selector(optionDeletePage))
             let copyToClipboard  = getMenuItem(title:  "Copy to clipboard", selector: #selector(optionSharePage) )
-
+            
             let options = NSMenu()
-                
+            
             options.autoenablesItems = false
             options.addItem(delete)
             options.addItem(copyToClipboard)
             options.popUp(positioning: options.item(at: 0), at: NSEvent.mouseLocation, in: nil)
-            
-            
-        } else {
-            // Left button click
-            let url = URL(string: sender.title)!
+        }
+        if event.type == NSEvent.EventType.leftMouseUp {
+            let url = URL(string: sender.keyEquivalent)!
             NSWorkspace.shared.open(url)
-            
         }
     }
     
     @objc func optionShareGroup(){
         NSPasteboard.general.clearContents()
-        let url_list = Persistance.shared.getUrlByKey(key: selectedGroup).compactMap { $0.absoluteString }.joined(separator: "\n")
+        let url_list = Persistance.shared.getUrlByKey(key: selectedGroup).compactMap { $0.url.absoluteString }.joined(separator: "\n")
         NSPasteboard.general.setString(url_list, forType: .string)
         
-     }
+    }
     
     @objc func optionDeleteGroup(){
         Persistance.shared.deleteKey(key: selectedGroup)
@@ -184,49 +184,49 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         alert.accessoryView = txt
         let response: NSApplication.ModalResponse = alert.runModal()
         alert.window.initialFirstResponder = txt
-
+        
         if (response == NSApplication.ModalResponse.alertFirstButtonReturn) {
             Persistance.shared.renameKey(oldKey: selectedGroup, newKey: txt.stringValue)
-              return true
-          } else {
-              return false
-          }
-       }
+            return true
+        } else {
+            return false
+        }
+    }
     
     @objc func optionSharePage(){
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(selectedPage, forType: .string)
     }
-       
-   @objc func optionDeletePage(){
-        Persistance.shared.deletePage(key: selectedPageKey, page: selectedPage)
+    
+    @objc func optionDeletePage(){
+        Persistance.shared.deletePage(key: selectedPageKey, page: originPage)
     }
     
     @objc func optionAddPage() ->Bool{
-           let title = "Insert the URL"
-           let text = " "
-           let alert = NSAlert()
-           alert.messageText = title
-           alert.icon =  #imageLiteral(resourceName:"TextFieldRename.png")
-           alert.informativeText = text
-           alert.alertStyle = .informational
-           alert.addButton(withTitle: "Add")
-           alert.addButton(withTitle: "Cancel")
-           let txt = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
-           txt.stringValue = "URL"
-           alert.accessoryView = txt
-           let response: NSApplication.ModalResponse = alert.runModal()
-           alert.window.initialFirstResponder = txt
-
-           if (response == NSApplication.ModalResponse.alertFirstButtonReturn) {
+        let title = "Insert the URL"
+        let text = " "
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.icon =  #imageLiteral(resourceName:"TextFieldRename.png")
+        alert.informativeText = text
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "Add")
+        alert.addButton(withTitle: "Cancel")
+        let txt = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
+        txt.stringValue = "URL"
+        alert.accessoryView = txt
+        let response: NSApplication.ModalResponse = alert.runModal()
+        alert.window.initialFirstResponder = txt
+        
+        if (response == NSApplication.ModalResponse.alertFirstButtonReturn) {
             if(!txt.stringValue.isEmpty){
-                Persistance.shared.addPage(key: selectedGroup, pageURL: txt.stringValue)
+                Persistance.shared.addPage(key: selectedGroup, page: Page(title: "title", url: URL(string: txt.stringValue)!))
             }
-                 return true
-             } else {
-                 return false
-             }
-       }
+            return true
+        } else {
+            return false
+        }
+    }
     
     @objc func deleteAll(){
         Persistance.shared.deleteAll()
@@ -248,12 +248,12 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         self.selectedGroup = sender.title
         let event = NSApp.currentEvent!
         if event.type == NSEvent.EventType.rightMouseUp {
-        // Right button click
+            // Right button click
             let rename = getMenuItem(title: "Rename", selector: #selector(optionRenameGroup))
             let addPage = getMenuItem(title: "Add Page", selector: #selector(optionAddPage))
             let delete = getMenuItem(title: "Delete", selector: #selector(optionDeleteGroup))
             let copyToClipboard  = getMenuItem(title:  "Copy to clipboard", selector: #selector(optionShareGroup) )
-         
+            
             let options = NSMenu()
             options.autoenablesItems = false
             
@@ -265,16 +265,16 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
             options.addItem(addPage)
             options.popUp(positioning: options.item(at: 0), at: NSEvent.mouseLocation, in: nil)
             
-      } else {
-          // Left button click
-            for url in Persistance.shared.getUrlByKey(key: sender.title) {
-            let url = URL(string: url.absoluteString)!
-            NSWorkspace.shared.open(url)
+        } else {
+            // Left button click
+            for page in Persistance.shared.getUrlByKey(key: sender.title) {
+                let url = URL(string: page.url.absoluteString)!
+                NSWorkspace.shared.open(url)
+            }
         }
-       }
     }
     
-    func parse(list:[String:[URL]]){
+    func parse(list:[String:[Page]]){
         var i = 0
         var ii = 0
         custom_menu = NSMenu()
@@ -294,12 +294,13 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
                 for page in v {
                     let a = NSMenuItem()
                     lista_de_subitems.insert(a, at: ii)
-                    let pageTitle = page.absoluteString
+                    let pageTitle = page.title
                     
-                        if (!pageTitle.isEmpty) {
-                            self.lista_de_subitems[ii] = getMenuItem(title: pageTitle, selector: #selector(selectPage))
-                            self.lista_submenu[i].addItem(self.lista_de_subitems[ii])
-                    ii+=1
+                    if (!pageTitle.isEmpty) {
+                        self.lista_de_subitems[ii] = getMenuItem(title: pageTitle, selector: #selector(selectPage))
+                        self.lista_de_subitems[ii].keyEquivalent = page.url.absoluteString
+                        self.lista_submenu[i].addItem(self.lista_de_subitems[ii])
+                        ii+=1
                     }
                     lista_de_items[i].submenu = lista_submenu[i]
                 }
@@ -314,11 +315,11 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
         
         for _item in lista_de_items{
             custom_menu.addItem(_item)
-            }
+        }
         if (custom_menu.items.count > 1){
             custom_menu.addItem(getMenuItem(title: "Delete all", selector: #selector(deleteAll)))
-            }
         }
+    }
     
 }
 
