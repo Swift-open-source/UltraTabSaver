@@ -16,6 +16,7 @@
 
 ## Table of Contents
 - [Features](#features)
+- [Branches](#branches)
 - [How to use it](#how-to-use-it)
 - [How does it work](#how-does-it-work)
 - [Building and running](#building-and-running)
@@ -40,6 +41,11 @@ This extension adds 3 main Features to Safari:
    * Add url to  the Tab Group
    * Delete a Tab Group
    * Delete a Tab inside a Tab Group
+   
+
+## Branches
+- Last stable version -> [master](https://github.com/Swift-open-source/UltraTabSaver/tree/master)
+- Experimental features -> [develop](https://github.com/Swift-open-source/UltraTabSaver/tree/develop)
    
    
 ## How to use it?
