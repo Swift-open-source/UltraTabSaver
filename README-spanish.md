@@ -15,7 +15,9 @@
 ![](Ultra-TabSaver.gif)
 
 ## Indice
+- [Update](#update)
 - [Funcionalidades](#funcionalidades)
+- [Branches](#branches)
 - [como usarlo](#como-usarlo)
 - [como funciona?](#como-funciona)
 - [Como ejecutarlo?](#como-ejecutarlo)
@@ -40,6 +42,10 @@ Esta extension agrega 3 caracterisitcas principales a Safari
    * Agregar una URL
    * Eliminar el grupo
    * Eliminar una URL dentro de un grupo
+   
+## Branches
+- Ultima version estable -> [master](https://github.com/Swift-open-source/UltraTabSaver/tree/master)
+- Version con funciones experimentales features -> [develop](https://github.com/Swift-open-source/UltraTabSaver/tree/develop)
    
    
 ## Como usarlo?
