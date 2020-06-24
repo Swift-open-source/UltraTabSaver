@@ -234,13 +234,9 @@ class Persistance {
             for key in keys
             {
                 do {
-                    
                     let storedData = UserDefaults.standard.data(forKey: key)
-                    
                     var pages = try JSONDecoder().decode([Page].self, from: storedData!)
-                    
                     emptyDict[key] = getURLFromString(pages: pages)
-                    
                 }
                 catch {
                     
