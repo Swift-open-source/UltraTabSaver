@@ -9,6 +9,19 @@
 import Foundation
 import SafariServices
 
+struct Page : Codable, Equatable {
+    var title: String
+    var url: URL
+    init() {
+        self.title = "ERROR"
+        self.url = URL(string:"https://www.google.com")!
+    }
+    init(title: String, url: URL) {
+        self.title = title
+        self.url = url
+    }
+}
+
 class Persistance {
     
     
@@ -17,7 +30,8 @@ class Persistance {
     var date = Date()
     let date_formatter = DateFormatter()
     var current_pageWindow:SFSafariWindow!
-    var emptyDict = [String:[URL]]()
+    var emptyDict = [String:[Page]]()
+    
     init(){
         load()
         UserDefaults.standard.synchronize()
@@ -28,11 +42,11 @@ class Persistance {
     func setActualPage(page: SFSafariPage){
         self.actual_page = page
     }
-
-    func getDictionaryAsString() -> [String:[String]]{
-        var dic2:[String:[String]] = [:]
+    
+    func getDictionaryAsString() -> [String:[Page]]{
+        var dic2:[String:[Page]] = [:]
         for (k,_) in emptyDict{
-            dic2[k] = getUrlByKey(key: k).compactMap { $0.absoluteString }
+            dic2[k] = emptyDict[k]
         }
         return dic2
     }
@@ -58,22 +72,26 @@ class Persistance {
     func saveActualPage(){
         if (actual_page != nil){
             actual_page.getPropertiesWithCompletionHandler({ (properties) in
-               guard let properties = properties else {
-                   self.validationHandler(false, "")
-                   return
-               }
-               
-               guard let url = properties.url else {
-                   self.validationHandler(false, "")
-                   return
-               }
-               guard url.scheme == "http" || url.scheme == "https" else {
-                   self.validationHandler(false, "")
-                   return
-               }
-                                                   
-                self.emptyDict[self.getStringAsDate(date: Date())] = [url]
-             })
+                guard let properties = properties else {
+                    self.validationHandler(false, "")
+                    return
+                }
+                
+                guard let url = properties.url else {
+                    self.validationHandler(false, "")
+                    return
+                }
+                guard url.scheme == "http" || url.scheme == "https" else {
+                    self.validationHandler(false, "")
+                    return
+                }
+                guard let title = properties.title else {
+                    self.validationHandler(false, "")
+                    return
+                }
+                let page = Page(title: String(title.prefix(15)), url: url)
+                self.emptyDict[self.getStringAsDate(date: Date())] = [page]
+            })
         }
         persist()
         if(actual_page != nil ){
@@ -82,25 +100,25 @@ class Persistance {
                     self.current_pageWindow  = window
                     window?.getAllTabs(completionHandler: { tab_list in
                         for _ in tab_list{
-                               NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
-                               if (tab_list.count > 1){
-                                   currentTab.close()
-                               }else{
-                                   NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
-                                    currentTab.close()
-                               return
+                            NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
+                            if (tab_list.count > 1){
+                                currentTab.close()
+                            }else{
+                                NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
+                                currentTab.close()
+                                return
                             }
-
+                            
                         }
                     })
-                    })
                 })
+            })
         }
     }
     
     
-    func getUrlByKey(key:String) -> [URL] {
-        var retorno = [URL(string: "ERROR")!]
+    func getUrlByKey(key:String) -> [Page] {
+        var retorno = [Page()]
         for (k,_) in emptyDict{
             if (k.elementsEqual(key)){
                 retorno =  emptyDict[k]!
@@ -113,52 +131,57 @@ class Persistance {
         var flag = true
         let date = getStringAsDate(date:Date())
         if(actual_page != nil ){
-        actual_page!.getContainingTab(completionHandler: { currentTab in
-            currentTab.getContainingWindow(completionHandler: { window in
-                self.current_pageWindow  = window
-                window?.getAllTabs(completionHandler: { tab_list in
-                    var i = 0
-                               for tab in tab_list{
-                                   tab.getActivePage(completionHandler: { (page) in
-                                    guard let page = page else{
+            actual_page!.getContainingTab(completionHandler: { currentTab in
+                currentTab.getContainingWindow(completionHandler: { window in
+                    self.current_pageWindow  = window
+                    window?.getAllTabs(completionHandler: { tab_list in
+                        var i = 0
+                        for tab in tab_list{
+                            tab.getActivePage(completionHandler: { (page) in
+                                guard let page = page else{
+                                    self.validationHandler(false, "")
+                                    return
+                                }
+                                page.getPropertiesWithCompletionHandler({ (properties) in
+                                    guard let properties = properties else {
                                         self.validationHandler(false, "")
                                         return
                                     }
-                                      page.getPropertiesWithCompletionHandler({ (properties) in
-                                            guard let properties = properties else {
-                                                self.validationHandler(false, "")
-                                                return
-                                            }
-                                            
-                                            guard let url = properties.url else {
-                                                self.validationHandler(false, "")
-                                                return
-                                            }
-                                            guard url.scheme == "http" || url.scheme == "https" else {
-                                                self.validationHandler(false, "")
-                                                return
-                                            }
-                                        if flag{
-                                            self.emptyDict[date] = [url]
-                                            flag = false
-                                        }else{
-                                            self.emptyDict[date]?.append(url)
-                                        }
-                                        self.persist()
-                                      })
-                                    NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
-                                    if (i < tab_list.count){
-                                        tab.close()
-                                        i += 1
+                                    
+                                    guard let url = properties.url else {
+                                        self.validationHandler(false, "")
+                                        return
                                     }
-                                    })
-                    }
+                                    guard url.scheme == "http" || url.scheme == "https" else {
+                                        self.validationHandler(false, "")
+                                        return
+                                    }
+                                    guard let title = properties.title else {
+                                        self.validationHandler(false, "")
+                                        return
+                                    }
+                                    let page = Page(title: title, url: url)
+                                    if flag{
+                                        self.emptyDict[date] = [page]
+                                        flag = false
+                                    }else{
+                                        self.emptyDict[date]?.append(page)
+                                    }
+                                    self.persist()
+                                })
+                                NSWorkspace.shared.open(URL(string:"https://www.google.com")!)
+                                if (i < tab_list.count){
+                                    tab.close()
+                                    i += 1
+                                }
+                            })
+                        }
+                    })
                 })
             })
-        })
         }
     }
-
+    
     func validationHandler(_: Bool,_: String){
         
     }
@@ -172,38 +195,58 @@ class Persistance {
         persist()
     }
     
-    func getAll()-> [String:[URL]] {
+    func getAll()-> [String:[Page]] {
         load()
         return self.emptyDict
     }
-
+    
     func persist(){
-            let domain = Bundle.main.bundleIdentifier!
-            UserDefaults.standard.removePersistentDomain(forName: domain)
-            UserDefaults.standard.synchronize()
-            let dic2:[String:[String]] = getDictionaryAsString()
-            var  keyList = [String]()
-            for (key,value) in dic2{
-
-                    UserDefaults.standard.setValue(value, forKey: key)
-                    keyList.append(key)
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.synchronize()
+        let dic2:[String:[Page]] = getDictionaryAsString()
+        var  keyList = [String]()
+        for (key,value) in dic2{
+            do {
+                
+                let data = try JSONEncoder().encode(value)
+                UserDefaults.standard.setValue(data, forKey: key)
+                keyList.append(key)
+                
             }
-            //     let myData = NSKeyedArchiver.archivedData(withRootObject: keys)
-            UserDefaults.standard.set(keyList, forKey: "UTSkeys")
-
-            UserDefaults.standard.synchronize()
+            catch {
+                
+                print(error)
+            }
+        }
+        //     let myData = NSKeyedArchiver.archivedData(withRootObject: keys)
+        UserDefaults.standard.set(keyList, forKey: "UTSkeysPages")
+        
+        UserDefaults.standard.synchronize()
     }
     
-       
+    
     func load(){
         UserDefaults.standard.synchronize()
-        let keys:[String] =  UserDefaults.standard.object(forKey: "UTSkeys") as? [String] ?? []
+        let keys:[String] =  UserDefaults.standard.object(forKey: "UTSkeysPages") as? [String] ?? []
         UserDefaults.standard.synchronize()
-       if(!keys.isEmpty){
+        if(!keys.isEmpty){
             for key in keys
             {
-                let urls:[String] = UserDefaults.standard.object(forKey: key) as! [String]
-                emptyDict[key] = getURLFromString(urls: urls)
+                do {
+                    
+                    let storedData = UserDefaults.standard.data(forKey: key)
+                    
+                    var pages = try JSONDecoder().decode([Page].self, from: storedData!)
+                    
+                    emptyDict[key] = getURLFromString(pages: pages)
+                    
+                }
+                catch {
+                    
+                    print(error)
+                }
+                
             }
         }
     }
@@ -221,37 +264,36 @@ class Persistance {
             deleteKey(key: oldKey)
             persist()
         }
-        
     }
     
-    func addPage(key:String, pageURL:String){
-        emptyDict[key]?.append(URL(string:pageURL)!)
+    func addPage(key:String, page:Page){
+        emptyDict[key]?.append(page)
         persist()
     }
     
     func dialogOK(question: String, text: String) -> Bool {
-          let alert = NSAlert()
-          alert.messageText = question
-          alert.informativeText = text
-          alert.alertStyle = .warning
-          alert.addButton(withTitle: "OK")
-          return alert.runModal() == .alertFirstButtonReturn
-
-      }
+        let alert = NSAlert()
+        alert.messageText = question
+        alert.informativeText = text
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "OK")
+        return alert.runModal() == .alertFirstButtonReturn
+        
+    }
     
-    func deletePage(key:String, page:String ){
-        let index = getDictionaryAsString()[key]?.firstIndex(of: page) ?? -1
+    func deletePage(key:String, page:Page ){
+        let index = emptyDict[key]?.firstIndex(of: page) ?? -1
         if (index != -1){
-             emptyDict[key]?.remove(at: index)
+            emptyDict[key]?.remove(at: index)
         }
         persist()
     }
     
     
-    func getURLFromString(urls:[String]) -> [URL]  {
-        var list:[URL] = []
-        for url in  urls{
-            list.append(URL(string: url)!)
+    func getURLFromString(pages:[Page]) -> [Page]  {
+        var list:[Page] = []
+        for page in  pages{
+            list.append(page)
         }
         return list
     }
