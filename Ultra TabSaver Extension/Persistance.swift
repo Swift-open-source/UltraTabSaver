@@ -221,6 +221,7 @@ class Persistance {
             deleteKey(key: oldKey)
             persist()
         }
+        
     }
     
     func addPage(key:String, pageURL:String){
