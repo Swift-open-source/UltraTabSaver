@@ -29,6 +29,8 @@
 ## Update
 - **[Promotional Video](https://www.youtube.com/watch?v=PNPAnn-jOCE)**
 - **Thank you for all the feedback, now that I know that many people find it useful I'll publish it to the App Store soon.**
+- **Now the Tab Groups are sorted alphabetically**
+- **Now it shows the description of the page**
 
 ## Features
 This extension adds 3 main Features to Safari:
