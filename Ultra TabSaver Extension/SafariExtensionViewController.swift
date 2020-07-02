@@ -299,7 +299,7 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
                     let pageTitle = page.title
                     
                     if (!pageTitle.isEmpty) {
-                        self.lista_de_subitems[ii] = getMenuItem(title: String(pageTitle.prefix(35)), selector: #selector(selectPage))
+                        self.lista_de_subitems[ii] = getMenuItem(title: String(pageTitle.prefix(65)), selector: #selector(selectPage))
                         self.lista_de_subitems[ii].keyEquivalent  = page.url.absoluteString.lowercased()
                         NSLog(page.url.absoluteString.lowercased())
                         self.lista_de_subitems[ii].keyEquivalentModifierMask = .init()
