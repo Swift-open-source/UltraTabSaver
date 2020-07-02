@@ -89,7 +89,7 @@ class Persistance {
                     self.validationHandler(false, "")
                     return
                 }
-                let page = Page(title: String(title.prefix(15)), url: url)
+                let page = Page(title: String(title.prefix(65)), url: url)
                 self.emptyDict[self.getStringAsDate(date: Date())] = [page]
             })
         }
