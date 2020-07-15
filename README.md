@@ -27,6 +27,8 @@
 - [Instalation Guide](https://github.com/Swift-open-source/UltraTabSaver/blob/main/INSTALLATION_GUIDE.md)
 - **[README en español](README-spanish.md)**
 
+#### Note: To use Ultra TabSaver you need to have installed macOS Catalina or macOS Big Sur
+
 ## Update
 - **[Promotional Video](https://www.youtube.com/watch?v=PNPAnn-jOCE)**
 - **Thank you for all the feedback, now that I know that many people find it useful I'll publish it to the App Store soon.**
