@@ -8,12 +8,19 @@
 -  📂 Search in the folder you clone/downloaded for the file `Ultra TabSaver.xcodeproj` and open it with Xcode
 
 ### 3 Sign it 
-- 🖌 Click in the main project -> Targets -> Signing and Capabilities and choose Automatically manage signing, Select your Team, and in Signing Certificate select Sign to Run locally
+- 🖌 Click in the main project -> Targets -> Signing and Capabilities:
+
+  - #### Choose Automatically manage signing
+  - #### Select your Team
+  - #### In Signing Certificate select Sign to Run locally
+ 
 <img width="1436" alt="Main Project" src="https://user-images.githubusercontent.com/33075003/87488038-af8ba980-c615-11ea-8a7d-a1892670e957.png">
 
-#### Then do the same with the extension.
+#### Then do the same with the extension. (Choose Automatically manage signing, Select your Team, In Signing Certificate select Sign to Run locally)
+   
 <img width="1436" alt="Extension signing" src="https://user-images.githubusercontent.com/33075003/87488088-cc27e180-c615-11ea-8a02-689bbe88c9de.png">
 
+ 
 ### 4 Archive
 - This process will create the App file.
 
