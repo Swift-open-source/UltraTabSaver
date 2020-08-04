@@ -195,8 +195,9 @@ class SafariExtensionViewController: SFSafariExtensionViewController {
     }
     
     @objc func optionSharePage(){
+        let url = Persistance.shared.getUrlByKey(key: selectedPageKey)[0].url.absoluteString
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(selectedPage, forType: .string)
+        NSPasteboard.general.setString(url, forType: .string)
     }
     
     @objc func optionDeletePage(){
