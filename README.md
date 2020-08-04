@@ -27,6 +27,10 @@
 - [Installation Guide](https://github.com/Swift-open-source/UltraTabSaver/blob/main/INSTALLATION_GUIDE.md)
 - **[README en español](README-spanish.md)**
 
+**Help us to upload this App to the AppStore, free for everyone** 
+
+<a href="https://www.buymeacoffee.com/UltraTabSaver" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+
 #### Note: To use Ultra TabSaver you need to have installed macOS Catalina or macOS Big Sur
 
 ## Update
