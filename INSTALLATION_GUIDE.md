@@ -10,13 +10,13 @@
 ### 3 Sign it 
 - 🖌 Click in the main project -> Targets -> Signing and Capabilities:
 
-  - #### Choose Automatically manage signing
+  - #### Choose **Automatically manage signing**
   - #### Select your Team
-  - #### In Signing Certificate select Sign to Run locally
+  - #### In Signing Certificate select **Development**
  
 <img width="1436" alt="Main Project" src="https://user-images.githubusercontent.com/33075003/87488038-af8ba980-c615-11ea-8a7d-a1892670e957.png">
 
-#### Then do the same with the extension. (Choose Automatically manage signing, Select your Team, In Signing Certificate select Sign to Run locally)
+#### Then do the same with the extension. (Choose Automatically manage signing, Select your Team, In Signing Certificate select Development)
    
 <img width="1436" alt="Extension signing" src="https://user-images.githubusercontent.com/33075003/87488088-cc27e180-c615-11ea-8a02-689bbe88c9de.png">
 
